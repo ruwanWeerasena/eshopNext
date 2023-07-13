@@ -10,12 +10,14 @@ const Products = () => {
   const [productList ,setproductlist] = useState([]);
     useEffect(()=>{
         const fetchProducts = async ()=>{
-            // const response = await fetch(`/api/products`);
-            // const data = await response.json();
-            // setproductlist(data)
+            const response = await fetch(`/api/products`);
+            const data = await response.json();
+            setproductlist(data)
         }
         fetchProducts();
     },[])
+
+    console.log(productList);
     
   return (
 <>
@@ -24,12 +26,11 @@ const Products = () => {
           {productList.map((product) => (
             <Grid item xs={3} key={product.id}>
                 <ProductCartItem
-                    
-                    name={product.Name}
-                    pictureFileName={product.PictureFileName}
-                    pictureUri={product.PictureUri}
-                    price={product.Price}
-                    id={product.ID}
+                    name={product.nameame}
+                    pictureFileName={product.pictureFileName}
+                    pictureUri={product.pictureUri}
+                    price={product.price}
+                    id={product.id}
                 />
             </Grid>
         ))}

@@ -5,7 +5,6 @@ import { Inter } from 'next/font/google'
 import { Container } from '@mui/material'
 import { createContext, useState } from 'react'
 import Navbar from '@/components/Navbar'
-import { SessionProvider } from 'next-auth/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,24 +14,25 @@ export const metadata = {
 }
 
 const CartContext = createContext();
+const UserContext = createContext();
 
 export default function RootLayout({ children }) {
 
   const [cart, setCart] = useState([]);
+  const [authdata, setAuthdata] = useState(null);
 
   return (
     <html lang="en">
       <body>
-      <SessionProvider>
-        
+      <UserContext.Provider value={{ authdata, setAuthdata }}>
         <CartContext.Provider value={{cart,setCart}}>
           <Navbar/>
           <Container>
             {children}
           </Container>
         </CartContext.Provider>
+      </UserContext.Provider>
 
-      </SessionProvider>
         
         
       </body>
@@ -40,4 +40,4 @@ export default function RootLayout({ children }) {
   )
 }
 
-export {CartContext};
+export {UserContext,CartContext};

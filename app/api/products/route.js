@@ -1,15 +1,15 @@
+import { prisma } from "@/utils/database";
+import { getAll } from "../_productservice";
 
 
 export const GET = async (req,res)=>{
 
     try {
-        // const conpool = await connectToDb();
-        // let products = await conpool.request().query("select * from products");
+        const allproducts = await getAll()
 
-        
-        return new Response(JSON.stringify({}),{status:200})
+        return new Response(JSON.stringify(allproducts),{status:200})
     } catch (error) {
-        console.log();
+        console.log(error);
         return new Response("Failed to fetch all",{status:500})
     }
 }

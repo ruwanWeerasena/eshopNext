@@ -12,26 +12,18 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { useState , useEffect } from 'react';
+import { useState , useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import {signIn,signOut,useSession,getProviders} from 'next-auth/react'
-
+import { UserContext } from '@/app/layout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 
 
 const Navbar = ()=>{
-  const{data:session} = useSession()
-  const [providers,setProviders] = useState(null);
+  const {authdata} = useContext(UserContext);
 
-  useEffect(()=>{
-    const setProvider = async ()=>{
-      const response = await getProviders();
-      setProviders(response);
-    }
-    setProvider();
-  },[])
 
-  console.log(session);
+
 
   const router = useRouter()
 
@@ -60,11 +52,12 @@ const Navbar = ()=>{
             
             <Box sx={{ flexGrow: 0}}>
               {
-                session?.user?
+                authdata?.customer?
                     <>
                     <Tooltip title="Open settings">
                     <IconButton onClick={()=>{}} sx={{ p: 0 }}>
-                      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                      {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+                      <AccountCircleIcon fontSize='large'/>
                     </IconButton>
                     </Tooltip>
                     <Menu
@@ -76,26 +69,15 @@ const Navbar = ()=>{
                         </MenuItem>
                     </Menu>
                     </> :
-                    <>
-                      {
-                        providers &&
-                        Object.values(providers).map(
-                          
-                            (provider)=>{
-                          
-                          return <Button
-                          sx={{ color: 'white' }}
-                          key={provider.name} 
-                          onClick={()=>signIn(provider.id)}
+                   
+                        <Button
+                              sx={{ color: 'white' }}
+                              onClick={()=>{
+                                router.push('/login')}}
                           >
                             Sign In
                           </Button>
-                          }
-                           
-                          
-                        )
-                      }
-                    </>
+                   
                   
                 
               }

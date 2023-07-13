@@ -11,15 +11,42 @@ datasource db {
 }
 
 model Customer {
-  id            Int      @id @default(autoincrement())
-  
-  email         String
-  username      String
-  image         String
-  firstname     String
-  lastname      String
-  password      String
- 
+  id        Int    @id @default(autoincrement())
+  email     String @unique
+  firstname String
+  lastname  String
+  password  String
+  cartDetails CartDetails[]
+}
 
+model Brand {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+model Product {
+  id                Int     @id @default(autoincrement())
+  name              String  @unique
+  description       String
+  price             Decimal
+  pictureFileName   String
+  pictureUri        String  @default("http://localhost:3000/images/")
+  brand             Brand   @relation(fields: [brandId], references: [id])
+  brandId           Int
+  availableStock    Int
+  restockThreshold  Int     @default(50)
+  maxStockThreshold Int     @default(100)
+  onRecorder        Int     @default(1)
+  cartDetails       CartDetails[]
+}
+
+model CartDetails {
+  id  Int     @id @default(autoincrement())
+  product Product @relation(fields: [productId], references: [id])
+  productId   Int
+  quantity    Int
+  customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  Int
 
 }

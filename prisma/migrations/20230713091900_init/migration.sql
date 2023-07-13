@@ -5,11 +5,12 @@ BEGIN TRAN;
 -- CreateTable
 CREATE TABLE [dbo].[Customer] (
     [id] INT NOT NULL IDENTITY(1,1),
+    [email] NVARCHAR(1000) NOT NULL,
     [firstname] NVARCHAR(1000) NOT NULL,
     [lastname] NVARCHAR(1000) NOT NULL,
-    [email] NVARCHAR(1000) NOT NULL,
     [password] NVARCHAR(1000) NOT NULL,
-    CONSTRAINT [Customer_pkey] PRIMARY KEY CLUSTERED ([id])
+    CONSTRAINT [Customer_pkey] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [Customer_email_key] UNIQUE NONCLUSTERED ([email])
 );
 
 COMMIT TRAN;

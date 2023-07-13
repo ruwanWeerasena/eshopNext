@@ -1,15 +1,32 @@
 "use client"
 
 import { Button, TextField, Typography } from '@mui/material'
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { UserContext } from '../layout';
+import { useRouter } from 'next/navigation';
 
 const SignIn = () => {
-  
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+  const router = useRouter()
+    const {setAuthdata} = useContext(UserContext);
+    const [username, setUsername] = useState("ruwan@email.com");
+    const [password, setPassword] = useState("123");
 
-    const login = ()=>{
+    const login = async ()=>{
+      
+        const response = await fetch(`/api/auth`,{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify({username,password})
+
+        });
+        const data = await response.json();
+        setAuthdata(data)
+        router.push('/')
         
+    
+   
     }
   return (
     <form style={{ padding: "100px 300px" }}>
