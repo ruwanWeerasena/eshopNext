@@ -4,7 +4,7 @@ import { UpdateAsync, retrievByProductIdAndCustomerIdAsync } from "../../_cartse
 export const PUT = async (req,res)=>{
     const cartItem = await req.json();
     try {
-        const existingcartItem = await retrievByProductIdAndCustomerIdAsync(cartItem.customerId,++cartItem.quantity)
+        const existingcartItem = await retrievByProductIdAndCustomerIdAsync(cartItem.customerId,cartItem.productId)
 
         const updatedCartItem = await UpdateAsync(existingcartItem.id , existingcartItem.quantity)
 

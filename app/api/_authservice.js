@@ -1,6 +1,5 @@
 import { prisma } from '@/utils/database';
 
-// import { PrismaClient } from "@prisma/client"
 
 
 export const  getAuthData = async(email)=>{

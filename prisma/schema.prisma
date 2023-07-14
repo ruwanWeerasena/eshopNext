@@ -48,5 +48,6 @@ model CartDetails {
   quantity    Int
   customer    Customer @relation(fields: [customerId], references: [id])
   customerId  Int
+  @@unique([productId, customerId], name: "cartidentifier")
 
 }

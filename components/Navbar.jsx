@@ -7,23 +7,22 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
+
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useState , useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
-import { UserContext } from '@/app/layout';
+import { CartContext, UserContext } from '@/app/layout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Badge from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 
 
 const Navbar = ()=>{
   const {authdata} = useContext(UserContext);
-
-
-
+  const{cart, setCart} = useContext(CartContext);
 
   const router = useRouter()
 
@@ -51,6 +50,15 @@ const Navbar = ()=>{
             </Box>
             
             <Box sx={{ flexGrow: 0}}>
+            <IconButton
+              size="large"
+              aria-label="show 16 new notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={cart.reduce((previous, current) => previous + current.quantity, 0)} color="error">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
               {
                 authdata?.customer?
                     <>

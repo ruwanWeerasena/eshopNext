@@ -1,13 +1,16 @@
 "use client"
 
 
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Grid from '@mui/material/Grid';
 import ProductCartItem from "../components/ProductCartItem";
+import { CartContext , UserContext } from "./layout";
 
 const Products = () => {
-
   const [productList ,setproductlist] = useState([]);
+  const {cart , setCart} = useContext(CartContext);
+  const {authdata , setAuthdata} = useContext(UserContext);
+
     useEffect(()=>{
         const fetchProducts = async ()=>{
             const response = await fetch(`/api/products`);
@@ -16,6 +19,22 @@ const Products = () => {
         }
         fetchProducts();
     },[])
+
+    useEffect(()=>{
+      const fetchCart = async ()=>{
+        const responseforall = await fetch(`/api/cart`,{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify(authdata.customer.id)
+
+        });
+        const dataset = await responseforall.json();
+        setCart(dataset);
+      }
+      authdata?.customer && fetchCart();
+    },[authdata])
 
     console.log(productList);
     

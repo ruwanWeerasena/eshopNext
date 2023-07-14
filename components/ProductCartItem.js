@@ -6,66 +6,73 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useContext } from "react";
 import { CartContext,UserContext } from "@/app/layout";
+import { useRouter } from "next/navigation";
 
 
 
 const ProductCartItem = ({ name, pictureFileName, pictureUri, price, id }) => {
+    const router = useRouter()
     const { authdata } = useContext(UserContext);
     const {cart , setCart} = useContext(CartContext);
-
+    console.log(cart);
     const handleAddtoCart = async()=>{
       if (authdata?.token) {
         const item = {
           customerId: authdata.customer.id,
           productId: id,
-          Quantity: 1,
+          quantity: 1,
         };
   
         if (cart.find((x) => x.productId == id)) {
           try {
-            const { data } = await fetch(
-              `http://localhost:5000/cart/${id}`,
-              item,
-              {
-                headers: {
-                  Authorization: `bearer ${authdata.token}`,
-                },
-              }
-            );
-  
-            var newList = cart.map((item) => {
-                if (item.productId == data.productId) {
-                  return {...item, quantity:data.quantity}
-              } else {
-                return item;
-              }
+            const responseforupdate = await fetch(`/api/cart/update`,{
+              method:'PUT',
+              headers:{
+                'Content-Type':'application/json'
+              },
+              body:JSON.stringify(item)
+    
             });
+            const data = await response.json();
+
   
-            //cart.push(data);
-            setCart(newList);
+            
           } catch (error) {
             console.log(error);
           }
+        
+
         } else {
           try {
-            const { data } = await axios.post(
-              "http://localhost:5000/cart",
-              item,
-              {
-                headers: {
-                  Authorization: `bearer ${authdata.token}`,
-                },
-              }
-            );
+            const responseforcreate = await fetch(`/api/cart/new`,{
+              method:'POST',
+              headers:{
+                'Content-Type':'application/json'
+              },
+              body:JSON.stringify(item)
+    
+            });
   
-            //cart.push(data);
-            setCart((items) => [...items, data]);
+           
           } catch (error) {
             console.log(error);
           }
         }
+
+        const responseforall = await fetch(`/api/cart`,{
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json'
+          },
+          body:JSON.stringify(authdata.customer.id)
+
+        });
+        const dataset = await responseforall.json();
+        setCart(dataset);
+
+
       } else {
-        // navigate("/signin");
+         router.push("/login");
       }
     }
   return (

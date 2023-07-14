@@ -7,7 +7,6 @@ export const POST = async (req,res)=>{
         const newcartItem = await createAsync(cartItem)
 
         
-
         return new Response(JSON.stringify(newcartItem),{status:200})
     } catch (error) {
         console.log(error);
