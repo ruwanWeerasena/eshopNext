@@ -14,20 +14,55 @@ import MenuItem from '@mui/material/MenuItem';
 import { useState , useEffect, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { CartContext, UserContext } from '@/app/layout';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Avatar from '@mui/material/Avatar';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 
 const Navbar = ()=>{
-  const {authdata} = useContext(UserContext);
+  const {authdata,setAuthdata} = useContext(UserContext);
   const{cart, setCart} = useContext(CartContext);
 
   const router = useRouter()
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMenu = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+  const handleClose = () => {
+    router.push('/profile')
+    setAnchorEl(null);
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    handleClose();
+    setOpen(true);
+  };
+  const signouthandleClickClose = ()=>{
+    handleClose();
+    setOpen(false);
+  }
+
+  const signouthandleClose = () => {
+    setOpen(false);
+    setAnchorEl(null);
+    setAuthdata(null);
+    router.push('/');
+  };
+
+  
+
       return (
-        
+       <div>
         <AppBar position="static" sx={{mb:2}}>
           <Toolbar variant="dense">
             <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
@@ -43,6 +78,7 @@ const Navbar = ()=>{
                 </Button>
                 <Button
                   sx={{ color: 'white' }}
+                  onClick={()=>router.push('/cart')}
                 >
                   Cart
                 </Button>
@@ -61,30 +97,50 @@ const Navbar = ()=>{
             </IconButton>
               {
                 authdata?.customer?
-                    <>
-                    <Tooltip title="Open settings">
-                    <IconButton onClick={()=>{}} sx={{ p: 0 }}>
-                      {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                      <AccountCircleIcon fontSize='large'/>
-                    </IconButton>
-                    </Tooltip>
-                    <Menu
-                      keepMounted
-                      open={false}
-                    >
-                        <MenuItem >
-                          <Typography textAlign="center">Sign Out</Typography>
-                        </MenuItem>
-                    </Menu>
-                    </> :
+                <>
+                <Tooltip title="Open settings">
+                  <IconButton
+                    onClick={handleMenu}
+                    sx={{ p: 0 }}
+                  >
+                    <Avatar
+                      alt={authdata.customer.firstName}
+                      src=" "
+                    />
+                  </IconButton>
+               
+                </Tooltip>
+                    <div>
+                    
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleClose}>My account</MenuItem>
+                    <MenuItem onClick={signouthandleClose}>Sign-Out</MenuItem>
+                  </Menu>
+                </div>
+                
+              </>:
                    
-                        <Button
-                              sx={{ color: 'white' }}
-                              onClick={()=>{
-                                router.push('/login')}}
-                          >
-                            Sign In
-                          </Button>
+                <Button
+                      color="inherit"
+                      onClick={()=>{
+                        router.push('/login')}}
+                  >
+                    Login
+                  </Button>
                    
                   
                 
@@ -94,6 +150,29 @@ const Navbar = ()=>{
             </Box>
           </Toolbar>
         </AppBar>
+        {/* <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Alert"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You have items in your cart..!<br/>
+            Are You sure to Sign Out?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={signouthandleClickClose}>No</Button>
+          <Button onClick={signouthandleClose} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+      </div> 
       );
 
 }

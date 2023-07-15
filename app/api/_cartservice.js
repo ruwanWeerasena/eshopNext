@@ -19,7 +19,10 @@ export const retrievByCustomerIdAsync = async (customerId) =>{
         where:{
             customerId:customerId
             
-        }
+        },
+        include: {
+            product: true
+          }
     });
 
     return allproducts;
@@ -37,10 +40,10 @@ export const createAsync = async ({productId,customerId,quantity}) =>{
     return createditem;
 }
 
-export const deleteAsync = async (id) =>{
-    const deleteditem = await prisma.cartDetails.delete({
+export const deleteByCustomerIdAsync = async (id) =>{
+    const deleteditem = await prisma.cartDetails.deleteMany({
         where:{
-            id:id
+            customerId:id
         }
     });
 

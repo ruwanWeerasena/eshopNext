@@ -11,21 +11,25 @@ datasource db {
 }
 
 model Customer {
+
   id        Int    @id @default(autoincrement())
   email     String @unique
   firstname String
   lastname  String
   password  String
   cartDetails CartDetails[]
+  orders     Orders[]
 }
 
 model Brand {
+
   id       Int       @id @default(autoincrement())
   name     String    @unique
   products Product[]
 }
 
 model Product {
+
   id                Int     @id @default(autoincrement())
   name              String  @unique
   description       String
@@ -39,9 +43,11 @@ model Product {
   maxStockThreshold Int     @default(100)
   onRecorder        Int     @default(1)
   cartDetails       CartDetails[]
+  orderDetails      OrderDetails[]
 }
 
 model CartDetails {
+
   id  Int     @id @default(autoincrement())
   product Product @relation(fields: [productId], references: [id])
   productId   Int
@@ -50,4 +56,31 @@ model CartDetails {
   customerId  Int
   @@unique([productId, customerId], name: "cartidentifier")
 
+}
+
+
+model Orders {
+
+  id              Int     @id @default(autoincrement())
+  customer        Customer @relation(fields: [customerId], references: [id])
+  customerId      Int
+  orderDate       DateTime @default(now())
+  streetAddress   String
+  city            String
+  state           String
+  paymentMethod   String
+  total           Decimal
+  orderdetails    OrderDetails[]
+}
+
+model OrderDetails {
+
+  id              Int     @id @default(autoincrement())
+  order           Orders  @relation(fields: [orderId], references: [id])
+  orderId         Int
+  product         Product @relation(fields: [productId], references: [id])
+  productId       Int
+  quantity        Int
+  price           Decimal
+ 
 }
